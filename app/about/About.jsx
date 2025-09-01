@@ -19,7 +19,7 @@ export default function About() {
 
 
       <h2>What We Do</h2>
-      <p>
+      
 
         <ul>
 
@@ -29,7 +29,7 @@ export default function About() {
 
         </ul>
 
-      </p>
+      
 
       {/* <h2>Team</h2>
       <div className={styles.team}>
