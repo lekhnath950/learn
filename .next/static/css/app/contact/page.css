@@ -1,0 +1,82 @@
+/*!**************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./app/contact/contact.module.css ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************/
+.contact_wrap__JNcjh { padding: 1.5rem 0; display:grid; grid-template-columns: 1fr 1fr; grid-gap: 1rem; gap: 1rem; }
+.contact_form__wCApJ { border:1px solid var(--border); border-radius:12px; padding:1rem; background:#0f172a; }
+.contact_form__wCApJ label { display:block; margin:.5rem 0 .25rem; color: var(--muted); }
+.contact_input__XHDqJ, .contact_textarea__o6tY1 {
+  width: 100%; padding: .7rem .8rem; border:1px solid var(--border); background:#0b1225; color:var(--text); border-radius:10px;
+}
+.contact_map__oBjtU { border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+@media (max-width: 900px){ .contact_wrap__JNcjh { grid-template-columns: 1fr; } }
+
+/*!****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./styles/globals.css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************/
+:root {
+  --bg: #0b0f1a;
+  --bg-elev: #0f172a;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #38bdf8; /* cyan-400 */
+  --accent-2: #f472b6; /* pink-400 */
+  --border: #1f2937;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { padding: 0; margin: 0; background: var(--bg); color: var(--text); font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; height: auto; display: block; }
+.container { width: min(1200px, 92%); margin-inline: auto; }
+.btn {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--bg-elev), #0b1225);
+  color: var(--text);
+  border-radius: 10px;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  cursor: pointer;
+}
+.btn:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(56,189,248,0.1); }
+.btn-accent { border-color: var(--accent); }
+.grid {
+  display: grid;
+  grid-gap: 1.25rem;
+  gap: 1.25rem;
+}
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+/* Parallax hero helper */
+.parallax {
+  background-image: url('/hero.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+/* Skip link */
+.skip-link {
+  position: absolute; left: -999px; top: -999px;
+}
+.skip-link:focus {
+  left: 1rem; top: 1rem; z-index: 9999;
+  background: var(--accent); color: #001018; padding: .5rem .75rem; border-radius: 8px;
+}
+footer { border-top: 1px solid var(--border); }
+
+.ad-container {
+  margin: 20px auto;
+  width: 100%;
+  max-width: 728px; 
+  text-align: center; 
+  z-index: 78854;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+

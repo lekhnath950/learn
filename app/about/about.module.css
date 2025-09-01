@@ -1,0 +1,4 @@
+.wrap { padding: 1.5rem 0; }
+.team { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top:1rem; }
+.card { border:1px solid var(--border); border-radius:12px; padding:1rem; background:#0f172a; }
+.avatar { width:80px; height:80px; border-radius:999px; background:#111827; border:1px solid var(--border); }

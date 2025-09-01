@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" role="img" aria-label="Map placeholder">
+  <defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#2b3344" stroke-width="1"/>
+  </pattern></defs>
+  <rect width="800" height="400" fill="#111827"/>
+  <rect width="800" height="400" fill="url(#grid)"/>
+  <text x="50%" y="50%" fill="#94a3b8" font-size="28" text-anchor="middle" font-family="Arial">Map Coming Soon</text>
+</svg>

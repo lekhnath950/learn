@@ -1,0 +1,52 @@
+{
+    "html": {
+        "title": "HTML",
+        "levels": [
+            {
+                "level": 1,
+                "title": "What is HTML",
+                "description": " HTML stands for **HyperText Markup Language**. It is the standard language used to create web pages. HTML uses **tags** to define elements on a page. \nTags are written inside angle brackets like <tagname>. ",
+                "example": "<!DOCTYPE html>\n<html>\n  <head>\n    <title>My First Page</title>\n  </head>\n  <body>\n    Hello World!\n  </body>\n</html>"
+            },
+            {
+                "level": 3,
+                "title": "Paragraphs",
+                "description": "Paragraphs are blocks of text. Use `<p>` tag to write them.",
+                "example": "<p>Hello, this is my first paragraph.</p>\n<p>I love learning HTML!</p>"
+            }
+        ]
+    },
+    "css": {
+        "title": "CSS",
+        "levels": [
+            {
+                "level": 1,
+                "title": "Selectors",
+                "description": "CSS selectors target HTML elements you want to style. Common selectors are element (like p), class (.class), and id (#id).",
+                "example": "p { color: red; }\n#main { padding: 10px; }\n.box { background: yellow; }"
+            },
+            {
+                "level": 2,
+                "title": "Universal Selector",
+                "description": "The universal selector * selects every element on the page for styling.",
+                "example": "* { font-family: Arial; color: blue; }"
+            }
+        ]
+    },
+    "Javascript": {
+        "title": "Javascript",
+        "levels": [
+            {
+                "level": 1,
+                "title": "Introduction to JavaScript",
+                "description": "JavaScript is a powerful programming language used mainly to add interactivity to websites. It runs directly in the browser allowing dynamic content such as responding to clicks, validating forms, or updating page content without reloading. Beyond web browsers, JavaScript also powers servers, mobile apps, and more, making it a versatile language.",
+                "example": "console.log(\"Hello, World!\");"
+            },
+            {
+                "level": 2,
+                "title": "Variables and Data Types",
+                "description": "Variables in JavaScript are containers to store data values. You can declare variables using 'let', 'const', or 'var' (modern practice favors 'let' and 'const'). JavaScript supports various data types: Number for all numeric values, String for text, Boolean for true/false, null for intentional empty value, undefined for unassigned variables, Object for complex data, and Array for ordered lists.",
+                "example": "let age = 30;\nconst name = \"Alice\";\nlet isStudent = false;"
+            }       ]
+    }
+}

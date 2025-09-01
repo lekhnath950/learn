@@ -1,0 +1,393 @@
+/*!**********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./app/learn/learn.module.css ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************/
+.learn_learnWrapper__4rF9D {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-gap: 1.5rem;
+  gap: 1.5rem;
+  margin: 2rem 0;
+  padding: 0 1rem;
+}
+
+.learn_content__EKsg_ {
+  padding: 0 1rem;
+}
+
+/*==================================*/
+/* Sidebar Styles */
+/*==================================*/
+
+.learn_sidebar__3SDHN {
+  border-right: 1px solid var(--border);
+  padding-right: 1rem;
+  max-height: calc(100vh - 2rem);
+  /* overflow-y: auto; */
+  position: -webkit-sticky;
+  position: sticky;
+  top: 1rem;
+  padding-left: 1rem;
+}
+
+.learn_sidebar__3SDHN h3 {
+  margin-bottom: 1rem;
+}
+
+.learn_sidebar__3SDHN ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  max-height: calc(40vh - 2rem);
+}
+
+.learn_sidebar__3SDHN li {
+  margin-bottom: 0.5rem;
+}
+
+.learn_sidebar__3SDHN a {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem;
+  text-decoration: none;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.learn_sidebar__3SDHN a:hover {
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.learn_activeLesson__GRpdH {
+  font-weight: bold;
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/*==================================*/
+/* Sidebar Controls & Search */
+/*==================================*/
+
+.learn_allTopicsBtn__Hd803, .learn_toggleSidebarBtn__GCWpP {
+  width: 100%;
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-elev);
+  color: var(--text);
+  cursor: pointer;
+  text-align: center;
+}
+
+.learn_allTopicsBtn__Hd803:hover, .learn_toggleSidebarBtn__GCWpP:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.learn_searchInput__j9F0E {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0f172a;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.learn_searchInput__j9F0E:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.learn_searchBox__iz7vh{
+    width: 100%;
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-elev);
+  color: var(--text);
+  cursor: pointer;
+  text-align: center;
+}
+
+.learn_searchBox__iz7vh input {
+  width: 100%;
+  border: 0px solid grey;
+  background-color: transparent;
+  outline:none;
+}
+
+.learn_resultList__4RhIQ {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  margin-top: 1rem;
+}
+
+.learn_resultItem__PwMra {
+  padding: .75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0f172a;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: border-color .2s ease, transform .2s ease;
+}
+
+.learn_resultItem__PwMra:hover {
+  border-color: var(--accent);
+  transform: translateX(4px);
+}
+
+/*==================================*/
+/* Main Content & Navigation */
+/*==================================*/
+
+.learn_breadcrumb__c2hrC {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  color: var(--muted);
+}
+
+.learn_breadcrumb__c2hrC a {
+  color: var(--muted);
+}
+
+.learn_breadcrumb__c2hrC a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.learn_currentCrumb__EleIw {
+  font-weight: bold;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.learn_codeBlock__0kVHi {
+  background: #0f172a;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+.learn_navButtons__nfBLR {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.learn_navButtons__nfBLR a,
+.learn_navButtons__nfBLR button {
+  padding: .5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-elev);
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: border-color .2s ease;
+}
+
+.learn_navButtons__nfBLR a:hover,
+.learn_navButtons__nfBLR button:hover {
+  border-color: var(--accent);
+}
+
+.learn_navButtons__nfBLR .learn_disabled__fdVVH {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/*==================================*/
+/* Topic Grid (for home page) */
+/*==================================*/
+
+.learn_topicGrid__5spsQ {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-gap: 1rem;
+  gap: 1rem;
+}
+
+.learn_topicCard__ncmAj {
+  border: 1px solid var(--border);
+  padding: 1rem;
+  border-radius: 12px;
+  background: #0f172a;
+  transition: transform .2s ease, border-color .2s ease;
+}
+
+.learn_topicCard__ncmAj:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}
+
+/*==================================*/
+/* Mobile-Specific Styles */
+/*==================================*/
+
+@media (max-width: 900px) {
+  .learn_learnWrapper__4rF9D {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  
+  .learn_sidebar__3SDHN {
+    /* Hide by default on mobile */
+    transform: translateX(-100%);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    width: 250px;
+    background: var(--bg-body);
+    padding: 1rem;
+    transition: transform 0.3s ease-in-out;
+    border-right: 1px solid var(--border);
+    border-bottom: none;
+    max-height: 100vh;
+    padding-left: 1rem;
+  }
+  
+  .learn_sidebar__3SDHN.learn_open__qWx0g {
+    transform: translateX(0);
+    background-color: #0f172a !important;
+  }
+  
+  .learn_toggleSidebarBtn__GCWpP {
+    display: block;
+    position: fixed;
+    /* top: 1rem; */
+    margin-top: auto;
+    right: 1rem;
+    z-index: 10;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    color: var(--text);
+    width: max-content;
+  }
+
+  .learn_content__EKsg_ {
+    padding-top: 5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .learn_allTopicsBtn__Hd803 {
+    display: block;
+    width: auto;
+  }
+
+  /* To cover the main content when sidebar is open */
+  .learn_learnWrapper__4rF9D.learn_overlay___1oSf::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+}
+
+@media (min-width: 901px) {
+  .learn_toggleSidebarBtn__GCWpP {
+    display: none;
+  }
+
+  .learn_sidebar__3SDHN {
+    display: block;
+    transform: none;
+    position: -webkit-sticky;
+    position: sticky;
+  }
+}
+
+
+
+
+.learn_learnBreadcrumb__VdJdN {
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 1.5rem;
+}
+
+.learn_learnBreadcrumb__VdJdN span {
+  margin: 0 0.5rem;
+}
+
+.learn_learnBreadcrumb__VdJdN a {
+  color: #666;
+  text-decoration: none;
+}
+
+.learn_learnBreadcrumb__VdJdN a:hover {
+  text-decoration: underline;
+}
+
+.learn_learnCurrentCrumb__MaoV4 {
+  color: #333;
+  font-weight: bold;
+}
+
+/* Lesson Grid Styling */
+.learn_learnLessonsGrid__i2Yot {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 1.5rem;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Lesson Card Styling */
+.learn_learnLessonCard__7PhFM {
+  background-color: #0f172a;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #333;
+  display: block;
+}
+
+.learn_learnLessonCard__7PhFM:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.learn_learnLessonCard__7PhFM h3 {
+  color: #fff;
+  font-size: 1.25rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.learn_learnLessonCard__7PhFM p {
+  color: #aaa;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 0;
+}
+
+

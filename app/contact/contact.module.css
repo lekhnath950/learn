@@ -1,0 +1,8 @@
+.wrap { padding: 1.5rem 0; display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form { border:1px solid var(--border); border-radius:12px; padding:1rem; background:#0f172a; }
+.form label { display:block; margin:.5rem 0 .25rem; color: var(--muted); }
+.input, .textarea {
+  width: 100%; padding: .7rem .8rem; border:1px solid var(--border); background:#0b1225; color:var(--text); border-radius:10px;
+}
+.map { border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+@media (max-width: 900px){ .wrap { grid-template-columns: 1fr; } }

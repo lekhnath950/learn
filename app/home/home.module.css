@@ -1,0 +1,26 @@
+.hero {
+  margin-top: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--bg-elev), #0b1225);
+}
+.heroInner { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; padding: 2rem; }
+.heroCopy h1 { font-size: clamp(2rem, 3.8vw, 3rem); margin: 0 0 .5rem; }
+.heroCopy p { color: var(--muted); margin: 0 0 1rem; }
+.heroActions { display: flex; gap: .75rem; flex-wrap: wrap; }
+.heroMedia { min-height: 260px; border-radius: 12px; overflow: hidden; }
+.heroMediaInner { height: 100%; width: 100%; }
+.heroParallax { height: 100%; width: 100%; }
+.cards { margin: 2rem 0; }
+.card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  background: #0f172a;
+  transition: transform .2s ease, border-color .2s ease;
+}
+.card:hover { transform: translateY(-4px); border-color: var(--accent); }
+@media (max-width: 900px){
+  .heroInner { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,40 @@
+.footer {
+    padding: 2rem 0;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.cols {
+    display: grid;
+    grid-template-columns: repeat(4, 2fr);
+    gap: 3rem;
+
+}
+
+.col h4 {
+    color: var(--text);
+    margin: 0 0 .5rem;
+}
+
+.copy {
+    margin-top: 1.25rem;
+    font-size: .9rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 900px) {
+    .cols {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 560px) {
+    .cols {
+        grid-template-columns: 1fr;
+    }
+}
