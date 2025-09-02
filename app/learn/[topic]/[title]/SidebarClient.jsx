@@ -1,10 +1,15 @@
+
 "use client";
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import styles from "../../learn.module.css";
 
+const LESSONS_TO_SHOW = 10; // 🎯 Number of lessons to show initially and with each click
+
 export function SidebarContent({ topic, currentTitle, levels, allTopics }) {
   const [query, setQuery] = useState("");
+  // 🚀 New state for "Load More" functionality
+  const [visibleLessons, setVisibleLessons] = useState(LESSONS_TO_SHOW);
 
   // Flatten all lessons for search
   const allLessons = useMemo(() => {
@@ -29,6 +34,10 @@ export function SidebarContent({ topic, currentTitle, levels, allTopics }) {
     [query, allLessons]
   );
 
+  const handleLoadMore = () => {
+    setVisibleLessons((prevCount) => prevCount + LESSONS_TO_SHOW);
+  };
+
   return (
     <>
       <Link href="/learn" className={styles.allTopicsBtn}>
@@ -50,7 +59,8 @@ export function SidebarContent({ topic, currentTitle, levels, allTopics }) {
             <div className={styles.currentTopic}>
               <h3>{allTopics[topic].title}</h3>
               <ul>
-                {(levels || []).map((lvl) => (
+                {/* 🚀 Slice the array to show a limited number of lessons */}
+                {(levels || []).slice(0, visibleLessons).map((lvl) => (
                   <li key={lvl.id}>
                     <Link
                       href={`/learn/${topic}/${lvl.id}`}
@@ -61,6 +71,12 @@ export function SidebarContent({ topic, currentTitle, levels, allTopics }) {
                   </li>
                 ))}
               </ul>
+              {/* 🚀 Add a conditional "Load More" button */}
+              {levels.length > visibleLessons && (
+                <button onClick={handleLoadMore} className={styles.loadMoreBtn}>
+                  Show more lessons ({levels.length - visibleLessons} left)
+                </button>
+              )}
             </div>
           )}
 
