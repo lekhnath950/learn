@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- Homepage -->
   <url>
     <loc>https://learn.khelira.com/</loc>
     <changefreq>daily</changefreq>
@@ -14,7 +13,6 @@
     <priority>0.9</priority>
   </url>
 
-  <!-- Learn Playground -->
   <url>
     <loc>https://learn.khelira.com/learn/html</loc>
     <changefreq>weekly</changefreq>
@@ -26,9 +24,5 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
-
-
-
 
 </urlset>
