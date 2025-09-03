@@ -11,3 +11,6 @@ D:/code/khelira_me/learn/node_modules/@next/swc-win32-x64-msvc/next-swc.win32-x6
 D:/code/khelira_me/learn/.next/cache/webpack/client-production/0.pack filter=lfs diff=lfs merge=lfs -text
 D:/code/khelira_me/learn/.next/cache/webpack/server-production/0.pack filter=lfs diff=lfs merge=lfs -text
 D:/code/khelira_me/learn/node_modules/@next/swc-win32-x64-msvc/next-swc.win32-x64-msvc.node filter=lfs diff=lfs merge=lfs -text
+D:/code/khelira_me/learn/.next/cache/webpack/client-production/0.pack filter=lfs diff=lfs merge=lfs -text
+D:/code/khelira_me/learn/.next/cache/webpack/server-production/0.pack filter=lfs diff=lfs merge=lfs -text
+D:/code/khelira_me/learn/node_modules/@next/swc-win32-x64-msvc/next-swc.win32-x64-msvc.node filter=lfs diff=lfs merge=lfs -text
