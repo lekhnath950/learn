@@ -71,7 +71,7 @@ export default async function TopicPage({ params }) {
               </Link>
 
               {/* ✅ Inline CRUD controls for this lesson */}
-              <LessonManager topic={topic} lessons={[lesson]} example={lesson.example}/>
+              <LessonManager topic={topic} lessons={[lesson]} example={lesson.example} />
             </div>
           ))}
         </div>

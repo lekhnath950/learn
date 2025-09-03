@@ -1,81 +1,8 @@
-// // // app/learn/page.jsx
-
-// // import Link from "next/link";
-// // import styles from "./learn.module.css";
-// // import { db } from "@/lib/firebase";
-// // import { collection, getDocs } from "firebase/firestore";
-
-// // export const revalidate = 60;
-
-// // export default async function LearnPage() {
-// //   // Fetch topics
-// //   const topicsSnapshot = await getDocs(collection(db, "topics"));
-
-// //   const topicsData = await Promise.all(
-// //     topicsSnapshot.docs.map(async (topicDoc) => {
-// //       const topicId = topicDoc.id;
-// //       const topicData = topicDoc.data();
-
-// //       // Fetch lessons for this topic
-// //       const lessonsSnapshot = await getDocs(
-// //         collection(db, `topics/${topicId}/lessons`)
-// //       );
-
-// //       const lessons = lessonsSnapshot.docs.map((doc) => ({
-// //         id: doc.id,
-// //         ...doc.data(),
-// //       }));
-
-// //       return {
-// //         id: topicId,
-// //         ...topicData,
-// //         lessons,
-// //       };
-// //     })
-// //   );
-
-// //   // 🔑 Group by topicId (slug)
-// //   const mergedTopics = Object.values(
-// //     topicsData.reduce((acc, topic) => {
-// //       if (!acc[topic.id]) {
-// //         acc[topic.id] = { ...topic, lessons: [] };
-// //       }
-// //       acc[topic.id].lessons.push(...topic.lessons);
-// //       return acc;
-// //     }, {})
-// //   );
-
-// //   return (
-// //     <div className={styles.learnPage}>
-// //       <h1>Learn to Code</h1>
-// //       <p>Explore our structured learning paths and start your coding journey today.</p>
-
-// //       <div className={styles.topicGrid}>
-// //         {mergedTopics.map((topic) => (
-// //           <Link
-// //             key={topic.id}
-// //             href={`/learn/${topic.id}/${topic.lessons[0]?.id || ""}`}
-// //             className={styles.topicCard}
-// //           >
-// //             <h2>{topic.title}</h2>
-// //             <p>{topic.description}</p>
-// //             <p>
-// //               <strong>{topic.lessons.length}</strong> lessons
-// //             </p>
-// //           </Link>
-// //         ))}
-// //       </div>
-// //     </div>
-// //   );
-// // }
-
-
 // // app/learn/page.jsx
-
 // import Link from "next/link";
 // import styles from "./learn.module.css";
 // import { db } from "@/lib/firebase";
-// import { collection, getDocs } from "firebase/firestore";
+// import { collection, getDocs, query, limit } from "firebase/firestore";
 
 // export const revalidate = 60;
 
@@ -85,14 +12,20 @@
 
 //   const topicsData = await Promise.all(
 //     topicsSnapshot.docs.map(async (topicDoc) => {
-//       const topicKey = topicDoc.id;
-//       const lessonsCollection = collection(db, `topics/${topicKey}/lessons`);
-//       const lessonsSnapshot = await getDocs(lessonsCollection);
+//       const topicId = topicDoc.id;
+//       const topicData = topicDoc.data();
+
+//       // ✅ Fetch only the first lesson
+//       const lessonsCollection = collection(db, `topics/${topicId}/lessons`);
+//       const firstLessonQuery = query(lessonsCollection, limit(100));
+//       const lessonsSnapshot = await getDocs(firstLessonQuery);
+//       const firstLesson = lessonsSnapshot.docs[0];
 
 //       return {
-//         id: topicDoc.id,
-//         ...topicDoc.data(),
-//         lessonCount: lessonsSnapshot.size, // ✅ only count lessons
+//         id: topicId,
+//         ...topicData,
+//         firstLessonId: firstLesson ? firstLesson.id : null,
+//         lessonCount: lessonsSnapshot.size,
 //       };
 //     })
 //   );
@@ -106,7 +39,7 @@
 //         {topicsData.map((topic) => (
 //           <Link
 //             key={topic.id}
-//             href={`/learn/${topic.id}`} // ✅ links only to the topic page
+//             href={topic.firstLessonId ? `/learn/${topic.id}/${topic.firstLessonId}` : `/learn/${topic.id}`}
 //             className={styles.topicCard}
 //           >
 //             <h2>{topic.title}</h2>
@@ -124,33 +57,26 @@
 import Link from "next/link";
 import styles from "./learn.module.css";
 import { db } from "@/lib/firebase";
-import { collection, getDocs, query, limit } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
+// Revalidate this page every 60 seconds to fetch new data
 export const revalidate = 60;
 
 export default async function LearnPage() {
+  // Get a reference to the 'topics' collection
   const topicsCollection = collection(db, "topics");
+
+  // Fetch all documents from the 'topics' collection in a single database read
   const topicsSnapshot = await getDocs(topicsCollection);
 
-  const topicsData = await Promise.all(
-    topicsSnapshot.docs.map(async (topicDoc) => {
-      const topicId = topicDoc.id;
-      const topicData = topicDoc.data();
-
-      // ✅ Fetch only the first lesson
-      const lessonsCollection = collection(db, `topics/${topicId}/lessons`);
-      const firstLessonQuery = query(lessonsCollection, limit(1));
-      const lessonsSnapshot = await getDocs(firstLessonQuery);
-      const firstLesson = lessonsSnapshot.docs[0];
-
-      return {
-        id: topicId,
-        ...topicData,
-        firstLessonId: firstLesson ? firstLesson.id : null,
-        lessonCount: lessonsSnapshot.size,
-      };
-    })
-  );
+  // Map the snapshot documents to a clean data array
+  const topicsData = topicsSnapshot.docs.map((topicDoc) => {
+    // Each topic document now contains the lessonCount and firstLessonId
+    return {
+      id: topicDoc.id,
+      ...topicDoc.data(),
+    };
+  });
 
   return (
     <div className={styles.learnPage}>
@@ -161,11 +87,13 @@ export default async function LearnPage() {
         {topicsData.map((topic) => (
           <Link
             key={topic.id}
+            // Navigate to the first lesson if it exists, otherwise to the topic base
             href={topic.firstLessonId ? `/learn/${topic.id}/${topic.firstLessonId}` : `/learn/${topic.id}`}
             className={styles.topicCard}
           >
             <h2>{topic.title}</h2>
             <p>{topic.description}</p>
+            {/* Display the correct lesson count from the topic document */}
             <small>{topic.lessonCount} lessons</small>
           </Link>
         ))}

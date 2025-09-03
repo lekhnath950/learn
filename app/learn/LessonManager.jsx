@@ -95,17 +95,32 @@
 "use client";
 import { useState, useEffect } from "react";
 import { auth, db } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import { doc, updateDoc, deleteDoc, addDoc, collection } from "firebase/firestore";
-import { FaEdit, FaTrash, FaTimes } from "react-icons/fa"; // Import FaTimes for the close button
+import {
+  onAuthStateChanged
+} from "firebase/auth";
+import {
+  doc,
+  updateDoc,
+  deleteDoc,
+  addDoc,
+  collection,
+  runTransaction,
+  query,
+  orderBy,
+  limit,
+  getDocs
+} from "firebase/firestore";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import styles from "./learn.module.css";
 
 export default function LessonManager({ topic, lessons }) {
   const [user, setUser] = useState(null);
-  const [newLesson, setNewLesson] = useState({ title: "", description: "" });
   const [editing, setEditing] = useState(null);
-  const [editData, setEditData] = useState({ title: "", description: "", example: "" });
-  const [showModal, setShowModal] = useState(false); // New state for modal visibility
+  const [editData, setEditData] = useState({
+    title: "",
+    description: "",
+    example: ""
+  });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => setUser(u));
@@ -114,127 +129,173 @@ export default function LessonManager({ topic, lessons }) {
 
   if (!user) return null;
 
-  // Add lesson
-  const handleAdd = async () => {
-    if (!newLesson.title) return;
-    await addDoc(collection(db, `topics/${topic}/lessons`), newLesson);
-    setNewLesson({ title: "", description: "" });
-    window.location.reload();
-  };
-
-  // Open modal and set initial edit data
-  const handleEditClick = (lesson) => {
-    setEditing(lesson.id);
-    setEditData({
-      title: lesson.title,
-      description: lesson.description,
-      example: lesson.example,
-    });
-    setShowModal(true); // Open the modal
-  };
-
-  // Save edit
+  // 🔹 Save edits to an existing lesson
   const handleSave = async (lessonId) => {
     const lessonRef = doc(db, `topics/${topic}/lessons`, lessonId);
+
     await updateDoc(lessonRef, editData);
+
+    // If the edited lesson was the first lesson, check if we need to update topic's firstLessonId
+    const topicRef = doc(db, "topics", topic);
+    const currentTopicDoc = lessons.find((l) => l.id === lessonId);
+
+    // If it's the same lesson ID, we don't need to fetch all lessons, just update data
+    if (currentTopicDoc.id === lessonId) {
+      await updateDoc(topicRef, {
+        firstLessonId: lessonId
+      });
+    }
+
     setEditing(null);
-    setShowModal(false); // Close the modal
     window.location.reload();
   };
 
-  // Delete
+  // 🔹 Delete a lesson
+  // const handleDelete = async (lessonId) => {
+  //   const topicRef = doc(db, "topics", topic);
+
+  //   await runTransaction(db, async (transaction) => {
+  //     const lessonRef = doc(db, `topics/${topic}/lessons`, lessonId);
+
+  //     // Delete lesson
+  //     transaction.delete(lessonRef);
+
+  //     // Get the current topic
+  //     const topicSnap = await transaction.get(topicRef);
+  //     if (!topicSnap.exists()) throw new Error("Topic not found");
+
+  //     const topicData = topicSnap.data();
+
+  //     let newLessonCount = (topicData.lessonCount || 1) - 1;
+
+  //     let updateData = {
+  //       lessonCount: newLessonCount
+  //     };
+
+  //     // If the deleted lesson was the firstLessonId
+  //     if (topicData.firstLessonId === lessonId && newLessonCount > 0) {
+  //       // Find the new first lesson with the lowest level using a single query
+  //       const q = query(
+  //         collection(db, `topics/${topic}/lessons`),
+  //         orderBy("level", "asc"),
+  //         limit(1)
+  //       );
+  //       const snapshot = await getDocs(q);
+  //       if (!snapshot.empty) {
+  //         updateData.firstLessonId = snapshot.docs[0].id;
+  //       } else {
+  //         updateData.firstLessonId = null; // no lessons left
+  //       }
+  //     } else if (newLessonCount === 0) {
+  //       updateData.firstLessonId = null; // no lessons left
+  //     }
+
+  //     transaction.update(topicRef, updateData);
+  //   });
+
+  //   window.location.reload();
+  // };
+
   const handleDelete = async (lessonId) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this lesson? This action cannot be undone.");
-    if (isConfirmed) {
-      try {
-        const lessonRef = doc(db, `topics/${topic}/lessons`, lessonId);
-        await deleteDoc(lessonRef);
-        window.location.reload();
-      } catch (error) {
-        console.error("Error deleting document: ", error);
-        alert("An error occurred while deleting the lesson. Please try again.");
-      }
+  const topicRef = doc(db, "topics", topic);
+  const lessonsCollection = collection(db, `topics/${topic}/lessons`);
+  const lessonRef = doc(lessonsCollection, lessonId);
+
+  await runTransaction(db, async (transaction) => {
+    // STEP 1: Read the topic document first
+    const topicSnap = await transaction.get(topicRef);
+    if (!topicSnap.exists()) throw new Error("Topic not found");
+
+    const topicData = topicSnap.data();
+    const currentFirstLessonId = topicData.firstLessonId;
+    const currentLessonCount = topicData.lessonCount || 0;
+
+    if (currentLessonCount <= 0) {
+      throw new Error("No lessons to delete");
     }
-  };
 
-  // Close modal
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setEditing(null); // Reset editing state
-  };
+    let newFirstLessonId = currentFirstLessonId;
 
-  // If lessons is empty => show Add form only
-  if (lessons.length === 0) {
-    return (
-      <div className={styles.addLessonForm}>
-        <h3>Add New Lesson</h3>
-        <input
-          type="text"
-          placeholder="Lesson Title"
-          value={newLesson.title}
-          onChange={(e) => setNewLesson({ ...newLesson, title: e.target.value })}
-        />
-        <textarea
-          placeholder="Lesson Description"
-          value={newLesson.description}
-          onChange={(e) =>
-            setNewLesson({ ...newLesson, description: e.target.value })
-          }
-        />
-        <button onClick={handleAdd}>Add Lesson</button>
-      </div>
-    );
-  }
+    // STEP 2: If deleting the current first lesson, find the new first lesson
+    if (currentFirstLessonId === lessonId && currentLessonCount > 1) {
+      // Query ONLY the next lesson with the lowest level
+      const q = query(lessonsCollection, orderBy("level", "asc"), limit(2));
+      const snapshot = await getDocs(q);
 
-  return (
-    <>
-      {lessons.map((lesson) => (
-        <div key={lesson.id} className={styles.lessonAdminActions}>
+      // We'll find the first lesson that's NOT the one being deleted
+      const remaining = snapshot.docs.filter((docSnap) => docSnap.id !== lessonId);
+
+      if (remaining.length > 0) {
+        newFirstLessonId = remaining[0].id;
+      } else {
+        newFirstLessonId = null;
+      }
+    } else if (currentLessonCount === 1) {
+      // If this was the only lesson
+      newFirstLessonId = null;
+    }
+
+    // ✅ ALL READS COMPLETE, now we can perform writes
+
+    // STEP 3: Delete the lesson
+    transaction.delete(lessonRef);
+
+    // STEP 4: Update the topic document
+    transaction.update(topicRef, {
+      lessonCount: currentLessonCount - 1,
+      firstLessonId: newFirstLessonId,
+    });
+  });
+
+  window.location.reload();
+};
+
+
+  return lessons.map((lesson) => (
+    <div key={lesson.id} className={styles.lessonAdminActions}>
+      {editing === lesson.id ? (
+        <>
+          <input
+            type="text"
+            value={editData.title}
+            onChange={(e) =>
+              setEditData({ ...editData, title: e.target.value })
+            }
+          />
+          <textarea
+            value={editData.description}
+            onChange={(e) =>
+              setEditData({ ...editData, description: e.target.value })
+            }
+          />
+          <textarea
+            value={editData.example}
+            onChange={(e) =>
+              setEditData({ ...editData, example: e.target.value })
+            }
+          />
+          <button onClick={() => handleSave(lesson.id)}>Save</button>
+          <button onClick={() => setEditing(null)}>Cancel</button>
+        </>
+      ) : (
+        <>
           <FaEdit
             className={styles.iconBtn}
-            onClick={() => handleEditClick(lesson)} // Use the new handler
+            onClick={() => {
+              setEditing(lesson.id);
+              setEditData({
+                title: lesson.title,
+                description: lesson.description,
+                example: lesson.example
+              });
+            }}
           />
           <FaTrash
             className={styles.iconBtn}
             onClick={() => handleDelete(lesson.id)}
           />
-        </div>
-      ))}
-
-      {showModal && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <button onClick={handleCloseModal} className={styles.modalCloseBtn}>
-              <FaTimes />
-            </button>
-            <h2>Edit Lesson</h2>
-            <label htmlFor="title">Title:</label>
-            <input
-              id="title"
-              type="text"
-              value={editData.title}
-              onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-            />
-            <label htmlFor="description">Description:</label>
-            <textarea
-              id="description"
-              value={editData.description}
-              onChange={(e) =>
-                setEditData({ ...editData, description: e.target.value })
-              }
-            />
-            <label htmlFor="example">Example:</label>
-            <textarea
-              id="example"
-              value={editData.example}
-              onChange={(e) =>
-                setEditData({ ...editData, example: e.target.value })
-              }
-            />
-            <button onClick={() => handleSave(editing)}>Save</button>
-          </div>
-        </div>
+        </>
       )}
-    </>
-  );
+    </div>
+  ));
 }

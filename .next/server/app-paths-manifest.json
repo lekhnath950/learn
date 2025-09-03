@@ -1,9 +1,9 @@
 {
-  "/admin/page": "app/admin/page.js",
-  "/learn/[topic]/[title]/page": "app/learn/[topic]/[title]/page.js",
-  "/learn/page": "app/learn/page.js",
-  "/learn/[topic]/page": "app/learn/[topic]/page.js",
-  "/contact/page": "app/contact/page.js",
   "/page": "app/page.js",
-  "/about/page": "app/about/page.js"
+  "/learn/[topic]/page": "app/learn/[topic]/page.js",
+  "/learn/[topic]/[title]/page": "app/learn/[topic]/[title]/page.js",
+  "/admin/upload/page": "app/admin/upload/page.js",
+  "/learn/page": "app/learn/page.js",
+  "/about/page": "app/about/page.js",
+  "/contact/page": "app/contact/page.js"
 }

@@ -1,18 +1,14 @@
-
-
 'use client';
 
 import { useState } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, doc, setDoc, getCountFromServer, getDoc } from 'firebase/firestore';
+import { collection, doc, runTransaction, getDoc } from 'firebase/firestore';
 import { slugify } from '@/utils/slugify';
-import { useRouter } from 'next/navigation'; // 🚀 Import useRouter
 import styles from './upload.module.css';
 import AdminAuth from '@/app/admin/AdminAuth';
 
 const UploadLesson = () => {
   const [user, setUser] = useState(null);
-  const router = useRouter(); // 🚀 Initialize router
 
   const [topic, setTopic] = useState('');
   const [topicTitle, setTopicTitle] = useState('');
@@ -23,6 +19,7 @@ const UploadLesson = () => {
   const [description, setDescription] = useState('');
   const [example, setExample] = useState('');
   const [message, setMessage] = useState('');
+  const [isPending, setIsPending] = useState(false);
 
   // 🔎 check topic exists
   const checkTopic = async (topic) => {
@@ -48,40 +45,66 @@ const UploadLesson = () => {
       setMessage('You must be logged in to upload content.');
       return;
     }
+    setIsPending(true);
     setMessage('Uploading...');
+
     const topicSlug = slugify(topic);
     const lessonSlug = slugify(title);
 
     try {
-      const lessonsCollectionRef = collection(db, 'topics', topicSlug, 'lessons');
-      const snapshot = await getCountFromServer(lessonsCollectionRef);
-      const nextLevel = snapshot.data().count + 1;
+      await runTransaction(db, async (transaction) => {
+        const topicRef = doc(db, 'topics', topicSlug);
+        const lessonRef = doc(collection(db, `topics/${topicSlug}/lessons`), lessonSlug);
 
-      if (!topicExists) {
-        await setDoc(doc(db, 'topics', topicSlug), {
-          title: topicTitle,
-          description: topicDescription,
+        // Read the current topic and new lesson documents within the transaction
+        const topicDoc = await transaction.get(topicRef);
+        const lessonDoc = await transaction.get(lessonRef);
+
+        if (lessonDoc.exists()) {
+          // If the lesson document already exists, stop and throw an error
+          throw new Error('This lesson already exists. Please choose a different title.');
+        }
+
+        const newLessonCount = (topicDoc.exists() ? topicDoc.data().lessonCount || 0 : 0) + 1;
+
+        // Create or update the topic document
+        if (!topicDoc.exists()) {
+          transaction.set(topicRef, {
+            title: topicTitle,
+            description: topicDescription,
+            firstLessonId: lessonSlug, // Set the first lesson's slug
+            lessonCount: newLessonCount,
+          });
+        } else {
+          transaction.update(topicRef, {
+            lessonCount: newLessonCount,
+          });
+        }
+
+        // Create the new lesson document with the calculated level
+        transaction.set(lessonRef, {
+          level: newLessonCount,
+          title,
+          description,
+          example: example || null,
         });
-      }
-
-      await setDoc(doc(db, 'topics', topicSlug, 'lessons', lessonSlug), {
-        level: nextLevel,
-        title,
-        description,
-        example: example || null,
       });
 
       setMessage('✅ Lesson uploaded successfully!');
+      // Reset form fields
       setTitle('');
       setDescription('');
       setExample('');
+
     } catch (error) {
       console.error('Error uploading document: ', error);
-      setMessage('❌ Error uploading content. Please try again.');
+      setMessage(`❌ Error uploading content: ${error.message}`);
+    } finally {
+      setIsPending(false);
     }
   };
-  
-  // 🚀 If the user is not logged in, redirect them
+
+  // The rest of your component's JSX remains the same
   if (!user) {
     return (
       <div className={styles['auth-card']}>
@@ -90,11 +113,11 @@ const UploadLesson = () => {
     );
   }
 
-  // If the user is logged in, show the upload form
   return (
     <div className={styles['auth-card']}>
       <AdminAuth onAuthChange={setUser} />
       <form onSubmit={handleSubmit} className={styles['auth-form']}>
+        {/* Topic details */}
         <div className={styles['auth-field']}>
           <label>Topic (slug, e.g., html, css):</label>
           <input
@@ -161,10 +184,14 @@ const UploadLesson = () => {
             onChange={(e) => setExample(e.target.value)}
           />
         </div>
-        <button type="submit" className={styles['auth-button']}>
-          Upload
+        <button type="submit" className={styles['auth-button']} disabled={isPending}>
+          {isPending ? 'Uploading...' : 'Upload'}
         </button>
-        {message && <p className={styles['auth-message-success']}>{message}</p>}
+        {message && (
+          <p className={message.startsWith('❌') ? styles['auth-message-error'] : styles['auth-message-success']}>
+            {message}
+          </p>
+        )}
       </form>
     </div>
   );
