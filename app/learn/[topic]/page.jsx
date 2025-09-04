@@ -1,10 +1,11 @@
+// app/learn/[topic]/page.js
+
 import Link from "next/link";
 import styles from "../learn.module.css";
 import { db } from "@/lib/firebase";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, orderBy, limit } from "firebase/firestore";
 import SidebarWrapper from "./[title]/SidebarClient";
-import LessonManager from "../LessonManager";
-
+import TopicLessons from "@/components/TopicLessons";
 
 export const revalidate = 60;
 
@@ -21,21 +22,24 @@ export async function generateStaticParams() {
 export default async function TopicPage({ params }) {
   const { topic } = params;
 
-  // Fetch all topics with lessons
-  const topicsSnapshot = await getDocs(collection(db, "topics"));
-  const allTopicsData = {};
-  for (const topicDoc of topicsSnapshot.docs) {
-    const topicId = topicDoc.id;
-    const lessonsSnapshot = await getDocs(
-      collection(db, `topics/${topicId}/lessons`)
-    );
-    allTopicsData[topicId] = {
-      id: topicId,
-      ...topicDoc.data(),
-      levels: lessonsSnapshot.docs.map((d) => ({ id: d.id, ...d.data() })),
-    };
-  }
+  // --- START MODIFIED FETCHING LOGIC ---
+  const lessonsCollectionRef = collection(db, `topics/${topic}/lessons`);
+  const firstBatchQuery = query(
+    lessonsCollectionRef,
+    orderBy("level", "asc"), // Ensure this matches your API route query
+    limit(4)
+  );
 
+  const firstBatchSnapshot = await getDocs(firstBatchQuery);
+  const initialLessons = firstBatchSnapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+  
+  const initialLastLessonId = firstBatchSnapshot.docs.length > 0
+    ? firstBatchSnapshot.docs[firstBatchSnapshot.docs.length - 1].id
+    : null;
+
+  const hasMore = firstBatchSnapshot.docs.length === 4;
+  // --- END MODIFIED FETCHING LOGIC ---
+  
   // Fetch current topic data
   const topicDocRef = doc(db, "topics", topic);
   const topicDocSnap = await getDoc(topicDocRef);
@@ -43,39 +47,41 @@ export default async function TopicPage({ params }) {
     return <p>Topic not found.</p>;
   }
   const topicData = topicDocSnap.data();
-  const lessons = allTopicsData[topic]?.levels || [];
+
+  // Fetch all topics with lessons for the sidebar (still needs all of them)
+  const allTopicsSnapshot = await getDocs(collection(db, "topics"));
+  const allTopicsData = {};
+  for (const topicDoc of allTopicsSnapshot.docs) {
+    const topicId = topicDoc.id;
+    const allLessonsSnapshot = await getDocs(
+      collection(db, `topics/${topicId}/lessons`)
+    );
+    allTopicsData[topicId] = {
+      id: topicId,
+      ...topicDoc.data(),
+      levels: allLessonsSnapshot.docs.map((d) => ({ id: d.id, ...d.data() })),
+    };
+  }
 
   return (
     <div className={styles.learnWrapper}>
-      {/* Sidebar */}
-      <SidebarWrapper topic={topic} levels={lessons} allTopics={allTopicsData} />
-
+      <SidebarWrapper topic={topic} levels={initialLessons} allTopics={allTopicsData} />
       <main className={styles.learnContent}>
-        {/* Breadcrumb */}
         <nav className={styles.learnBreadcrumb}>
           <Link href="/learn">Learn</Link>
           <span>›</span>
           <span className={styles.learnCurrentCrumb}>{topicData.title}</span>
         </nav>
-
-        {/* Current topic details */}
         <h1>{topicData.title}</h1>
         <p>{topicData.description}</p>
-
-        <div className={styles.learnLessonsGrid}>
-          {lessons.map((lesson) => (
-            <div key={lesson.id} className={styles.learnLessonCard}>
-              <Link href={`/learn/${topic}/${lesson.id}`}>
-                <h3>{lesson.title}</h3>
-                <p>{lesson.description.substring(0, 100)}...</p>
-              </Link>
-
-              {/* ✅ Inline CRUD controls for this lesson */}
-              <LessonManager topic={topic} lessons={[lesson]} example={lesson.example} />
-            </div>
-          ))}
-        </div>
-
+        
+        {/* Pass initial lessons and state to the client component */}
+        <TopicLessons 
+          topic={topic}
+          initialLessons={initialLessons} 
+          initialLastLessonId={initialLastLessonId}
+          initialHasMore={hasMore}
+        />
       </main>
     </div>
   );

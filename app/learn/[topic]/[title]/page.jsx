@@ -5,6 +5,7 @@ import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import styles from "../../learn.module.css";
 import { slugify } from "@/utils/slugify";
 import SidebarWrapper from "./SidebarClient";
+import LessonAdminActions from "@/components/LessonAdminActions";
 
 export const revalidate = 60;
 
@@ -71,6 +72,7 @@ export default async function LessonPage({ params }) {
         allTopics={allTopicsData || {}}
       />
       <main className={styles.content}>
+         <LessonAdminActions topic={topic} lesson={{ id: title, ...current }} />
         <nav className={styles.breadcrumb}>
           <Link href="/learn">Learn</Link>
           <span> › </span>
