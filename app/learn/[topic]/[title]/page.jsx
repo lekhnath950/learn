@@ -1,7 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 import { db } from "@/lib/firebase";
-import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs, query, orderBy,  } from "firebase/firestore";
 import styles from "../../learn.module.css";
 import { slugify } from "@/utils/slugify";
 import SidebarWrapper from "./SidebarClient";
@@ -42,14 +42,19 @@ export default async function LessonPage({ params }) {
 
   // Fetch lessons of current topic
   const lessonsCollectionRef = collection(db, `topics/${topic}/lessons`);
-  const lessonsSnapshot = await getDocs(lessonsCollectionRef);
-  const levels = lessonsSnapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+  const lessonsQuery = query(lessonsCollectionRef, orderBy("level", "asc")); // ✅ Sort by level in Firestore
+  const lessonsSnapshot = await getDocs(lessonsQuery);
+const levels = lessonsSnapshot.docs.map((d) => ({ id: d.id, ...d.data() })); 
+  // const levels = lessonsSnapshot.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => a.level - b.level);
 
   // Get current lesson
   const currentDoc = lessonsSnapshot.docs.find((d) => d.id === title);
   if (!currentDoc) return <p>Lesson not found</p>;
-  const current = currentDoc.data();
-  const currentIndex = lessonsSnapshot.docs.findIndex((d) => d.id === title);
+
+  // const current = currentDoc.data();
+  // const currentIndex = lessonsSnapshot.docs.findIndex((d) => d.id === title);
+  const currentIndex = levels.findIndex((lesson) => lesson.id === title);
+const current = levels[currentIndex];
 
   // Fetch all topics with lessons
   const allTopicsSnapshot = await getDocs(collection(db, "topics"));
@@ -85,7 +90,7 @@ export default async function LessonPage({ params }) {
           {topicData.title} — {current.title}
         </h1>
 
-        <ReactMarkdown>{current.description}</ReactMarkdown>
+        <ReactMarkdown>{current.description.replace(/\\n/g, "\n")}</ReactMarkdown>
 
 {current.example && (
   <pre className={styles.codeBlock}>

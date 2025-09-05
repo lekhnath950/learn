@@ -1,26 +1,371 @@
+
+
+/* HERO SECTION */
 .hero {
-  margin-top: 1rem;
+  background: var(--bg-primary);
+  padding: 3rem 2rem;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 2rem;
   border: 1px solid var(--border);
+}
+
+.heroInner {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  gap: 2rem;
+}
+
+.heroCopy h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  margin: 0 0 1rem;
+  color: white;
+}
+
+.heroCopy p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.heroMedia {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  background: linear-gradient(145deg, var(--accent-glow), transparent 70%);
   border-radius: 16px;
   overflow: hidden;
-  background: linear-gradient(180deg, var(--bg-elev), #0b1225);
 }
-.heroInner { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; padding: 2rem; }
-.heroCopy h1 { font-size: clamp(2rem, 3.8vw, 3rem); margin: 0 0 .5rem; }
-.heroCopy p { color: var(--muted); margin: 0 0 1rem; }
-.heroActions { display: flex; gap: .75rem; flex-wrap: wrap; }
-.heroMedia { min-height: 260px; border-radius: 12px; overflow: hidden; }
-.heroMediaInner { height: 100%; width: 100%; }
-.heroParallax { height: 100%; width: 100%; }
-.cards { margin: 2rem 0; }
+
+.heroGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, var(--accent), transparent 70%);
+  opacity: 0.4;
+}
+
+/* CARDS SECTION */
+.cards {
+  margin: 3rem 0;
+}
+
+.sectionTitle {
+  text-align: center;
+  color: white;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+}
+
+.grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
 .card {
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1rem;
-  background: #0f172a;
-  transition: transform .2s ease, border-color .2s ease;
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.3s ease, border-color 0.3s ease;
 }
-.card:hover { transform: translateY(-4px); border-color: var(--accent); }
-@media (max-width: 900px){
-  .heroInner { grid-template-columns: 1fr; }
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent);
+}
+
+.cardIcon {
+  font-size: 2rem;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.card h3 {
+  font-size: 1.3rem;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.cardLink {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.cardLink:hover {
+  text-decoration: underline;
+}
+
+/* CTA SECTION */
+.ctaSection {
+  display: flex;
+  justify-content: center;
+  padding: 4rem 0;
+}
+
+.ctaCard {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 500px;
+}
+
+.ctaCard h2 {
+  color: white;
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.ctaCard p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .heroInner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .heroActions {
+    justify-content: center;
+  }
+
+  .heroMedia {
+    height: 180px;
+  }
+}
+
+
+/* SEARCH WRAPPER */
+.searchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.searchIcon {
+  color: var(--text-muted);
+  margin-right: 0.5rem;
+}
+
+.searchInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 1rem;
+}
+
+.searchInput::placeholder {
+  color: var(--text-muted);
+}
+
+/* SEARCH RESULTS DROPDOWN */
+.searchResults {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 20;
+}
+
+.searchResultItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: white;
+  transition: background 0.2s ease;
+}
+
+.searchResultItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.resultTopic {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.resultLesson {
+  color: var(--text-muted);
+}
+
+.searchLoading,
+.noResults {
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+
+
+/* Keep your existing CSS; add the following search styles */
+
+/* Make the wrapper relative so the dropdown anchors correctly */
+.searchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 0.5rem 0.75rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.searchIcon {
+  margin-right: 0.5rem;
+  color: var(--text-muted);
+  flex: 0 0 auto;
+}
+
+.searchInput {
+  flex: 1 1 auto;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.25rem 0;
+}
+
+.searchInput::placeholder {
+  color: var(--text-muted);
+}
+
+/* Dropdown stays mounted; toggled with .open */
+.searchResults {
+  position: absolute;
+  left: 0; right: 0;
+  top: calc(100% + 8px);
+  background: rgba(15, 23, 42, 0.9); /* #0f172a w/ opacity */
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+  backdrop-filter: blur(12px);
+  max-height: 320px;
+  height: max-content;
+  overflow-y: auto;
+  overflow-y: scroll;
+  display: none;           /* hidden by default */
+  z-index: 40;
+}
+
+.searchResults.open {
+  display: block;          /* shown only when query has text */
+  overflow-y: scroll;
+}
+
+.searchStatus {
+  padding: 0.8rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.searchResultItem {
+  display: block;
+  padding: 0.7rem 1rem;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.15s ease;
+}
+
+.searchResultItem:last-child {
+  border-bottom: none;
+}
+
+.searchResultItem:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+.resultMain {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+}
+
+.resultLesson {
+  color: #fff;
+  font-weight: 600;
+}
+
+.resultMeta {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.levelBadge {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+}
+
+
+/* Load more button */
+.loadMoreWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.loadMoreBtn {
+  background: var(--accent);
+  color: #fff;
+  padding: 0.6rem 1.5rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s ease;
+}
+
+.loadMoreBtn:hover {
+  background: var(--accent-dark);
+}
+
+.loadMoreBtn:disabled {
+  background: var(--text-muted);
+  cursor: not-allowed;
 }

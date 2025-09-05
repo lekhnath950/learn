@@ -1,3 +1,3 @@
-import LearnPage from "./learn/page";
+import Home from "./home/Home";
 
-export default function Page() { return <LearnPage />; }
+export default function Page() { return <Home />; }
