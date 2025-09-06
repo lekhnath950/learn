@@ -162,12 +162,26 @@
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: center; /* Center horizontally */
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border);
   backdrop-filter: blur(10px);
   border-radius: 12px;
-  padding: 0.5rem 1rem;
-  margin-bottom: 1.5rem;
+  padding: 0.5rem 0.75rem;
+  margin: 2rem auto; /* Center the whole component */
+  width: 30vw; /* Default for laptops/desktops */
+  max-width: 600px; /* Safety cap */
+  min-width: 280px; /* Prevent it from being too small */
+  z-index: 400;
+  transition: width 0.3s ease; /* Smooth resize on window change */
+}
+
+@media (max-width: 768px) {
+  .searchWrapper {
+    width: 90%;
+    max-width: none;
+    margin: 1rem auto;
+  }
 }
 
 .searchIcon {
@@ -180,8 +194,9 @@
   background: transparent;
   border: none;
   outline: none;
-  color: white;
+  color: #fff;
   font-size: 1rem;
+  padding: 0.25rem 0;
 }
 
 .searchInput::placeholder {
@@ -191,17 +206,22 @@
 /* SEARCH RESULTS DROPDOWN */
 .searchResults {
   position: absolute;
-  top: 100%;
   left: 0;
   right: 0;
-  background: rgba(15, 23, 42, 0.95);
-  backdrop-filter: blur(12px);
+  top: calc(100% + 8px);
+  background: rgba(15, 23, 42, 0.9);
   border: 1px solid var(--border);
-  border-top: none;
-  border-radius: 0 0 12px 12px;
-  max-height: 300px;
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+  max-height: 320px;
   overflow-y: auto;
-  z-index: 20;
+  display: none;
+  z-index: 50;
+}
+
+.searchResults.open {
+  display: block;
 }
 
 .searchResultItem {
@@ -234,10 +254,6 @@
 }
 
 
-
-/* Keep your existing CSS; add the following search styles */
-
-/* Make the wrapper relative so the dropdown anchors correctly */
 .searchWrapper {
   position: relative;
   display: flex;
@@ -248,6 +264,8 @@
   border-radius: 12px;
   padding: 0.5rem 0.75rem;
   margin: 1rem 0 1.5rem;
+  z-index: 400;
+
 }
 
 .searchIcon {
@@ -272,31 +290,34 @@
 
 /* Dropdown stays mounted; toggled with .open */
 .searchResults {
-  position: absolute;
-  left: 0; right: 0;
+ position: absolute;
   top: calc(100% + 8px);
-  background: rgba(15, 23, 42, 0.9); /* #0f172a w/ opacity */
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.95);
   border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 8px 28px rgba(0,0,0,0.35);
   backdrop-filter: blur(12px);
   max-height: 320px;
-  height: max-content;
   overflow-y: auto;
-  overflow-y: scroll;
-  display: none;           /* hidden by default */
-  z-index: 40;
+  display: none;
+  z-index: 50;
 }
 
 .searchResults.open {
   display: block;          /* shown only when query has text */
   overflow-y: scroll;
+
 }
 
 .searchStatus {
   padding: 0.8rem 1rem;
   color: var(--text-muted);
   font-size: 0.95rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
 }
 
 .searchResultItem {
@@ -305,6 +326,7 @@
   text-decoration: none;
   border-bottom: 1px solid rgba(255,255,255,0.05);
   transition: background 0.15s ease;
+
 }
 
 .searchResultItem:last-child {
@@ -319,18 +341,22 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  /* justify-content: space-between; */
+
   
 }
 
 .resultLesson {
   color: #fff;
   font-weight: 600;
+
 }
 
 .resultMeta {
   margin-top: 2px;
   color: var(--text-muted);
   font-size: 0.85rem;
+
 }
 
 .levelBadge {
@@ -343,29 +369,36 @@
 }
 
 
-/* Load more button */
-.loadMoreWrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 2rem;
-}
 
-.loadMoreBtn {
+
+/* Search Button */
+.searchButton {
   background: var(--accent);
   color: #fff;
-  padding: 0.6rem 1.5rem;
-  border-radius: 10px;
   border: none;
+  outline: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  margin-left: 0.5rem;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.2s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background 0.25s ease, transform 0.2s ease;
+  flex-shrink: 0;
 }
 
-.loadMoreBtn:hover {
+.searchButton:hover {
   background: var(--accent-dark);
+  transform: translateY(-2px);
 }
 
-.loadMoreBtn:disabled {
+.searchButton:active {
+  transform: translateY(0);
+}
+
+.searchButton:disabled {
   background: var(--text-muted);
+  color: rgba(255, 255, 255, 0.6);
   cursor: not-allowed;
+  transform: none;
 }
